@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'quiz_bank.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 QuizBank quizBank = QuizBank();
 
@@ -35,6 +36,35 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
+  int scoreCalc(List<Icon> scoreKeeper) {
+    int score = 0;
+    for (int i = 0; i < scoreKeeper.length; i++) {
+      if (scoreKeeper[i].color == Colors.green) {
+        score++;
+      }
+    }
+    return score;
+  }
+  void checkAnswer(bool userPickedAnswer)
+  {
+    int score = scoreCalc(scoreKeeper);
+    bool correctAnswer = quizBank.getQuestionAnswer(quizBank.questionNum);
+    setState(() {
+      if (userPickedAnswer == correctAnswer) {
+        scoreKeeper.add(Icon(Icons.check, color: Colors.green));
+      } else {
+        scoreKeeper.add(Icon(Icons.close, color: Colors.red));
+      }
+      if (quizBank.questionNum < quizBank.questionBank.length - 1) {
+        quizBank.nextQuestion();
+      }
+      else {
+        Alert(context: context, title: "Finished", desc: "You scored $score out of ${quizBank.questionBank.length}").show();
+        quizBank.questionNum = 0;
+        scoreKeeper = [];
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,17 +94,7 @@ class _QuizPageState extends State<QuizPage> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
               ),
               onPressed: () {
-                setState(() {
-                  if (quizBank.getQuestionAnswer(quizBank.questionNum) ==
-                      true) {
-                    scoreKeeper.add(Icon(Icons.check, color: Colors.green));
-                  } else {
-                    scoreKeeper.add(Icon(Icons.close, color: Colors.red));
-                  }
-                  if (quizBank.questionNum < quizBank.questionBank.length - 1) {
-                    quizBank.nextQuestion();
-                  }
-                });
+              checkAnswer(true);
               },
               child: Text(
                 'True',
@@ -96,17 +116,8 @@ class _QuizPageState extends State<QuizPage> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
               ),
               onPressed: () {
-                setState(() {
-                  if (quizBank.getQuestionAnswer(quizBank.questionNum) ==
-                      false) {
-                    scoreKeeper.add(Icon(Icons.check, color: Colors.green));
-                  } else {
-                    scoreKeeper.add(Icon(Icons.close, color: Colors.red));
-                  }
-                  if (quizBank.questionNum < quizBank.questionBank.length - 1) {
-                    quizBank.nextQuestion();
-                  }
-                });
+                checkAnswer(false);
+
               },
               child: Text(
                 'False',
