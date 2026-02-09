@@ -45,8 +45,8 @@ class _QuizPageState extends State<QuizPage> {
     }
     return score;
   }
-  void checkAnswer(bool userPickedAnswer)
-  {
+
+  void checkAnswer(bool userPickedAnswer) {
     int score = scoreCalc(scoreKeeper);
     bool correctAnswer = quizBank.getQuestionAnswer(quizBank.questionNum);
     setState(() {
@@ -57,9 +57,12 @@ class _QuizPageState extends State<QuizPage> {
       }
       if (quizBank.questionNum < quizBank.questionBank.length - 1) {
         quizBank.nextQuestion();
-      }
-      else {
-        Alert(context: context, title: "Finished", desc: "You scored $score out of ${quizBank.questionBank.length}").show();
+      } else {
+        Alert(
+          context: context,
+          title: "Finished",
+          desc: "You scored $score out of ${quizBank.questionBank.length}",
+        ).show();
         quizBank.questionNum = 0;
         scoreKeeper = [];
       }
@@ -94,7 +97,7 @@ class _QuizPageState extends State<QuizPage> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
               ),
               onPressed: () {
-              checkAnswer(true);
+                checkAnswer(true);
               },
               child: Text(
                 'True',
@@ -117,7 +120,6 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 checkAnswer(false);
-
               },
               child: Text(
                 'False',
