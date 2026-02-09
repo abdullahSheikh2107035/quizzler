@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'quiz_bank.dart';
+
+QuizBank quizBank = QuizBank();
 
 void main() {
   runApp(Quizzler());
@@ -31,6 +34,8 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  List<Icon> scoreKeeper = [];
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -43,7 +48,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10),
             child: Center(
               child: Text(
-                'This is where the question text will go',
+                quizBank.getQuestionText(quizBank.questionNum),
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 25, color: Colors.white),
               ),
@@ -56,11 +61,21 @@ class _QuizPageState extends State<QuizPage> {
             child: TextButton(
               style: TextButton.styleFrom(
                 backgroundColor: Colors.green,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.zero,
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
               ),
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  if (quizBank.getQuestionAnswer(quizBank.questionNum) ==
+                      true) {
+                    scoreKeeper.add(Icon(Icons.check, color: Colors.green));
+                  } else {
+                    scoreKeeper.add(Icon(Icons.close, color: Colors.red));
+                  }
+                  if (quizBank.questionNum < quizBank.questionBank.length - 1) {
+                    quizBank.nextQuestion();
+                  }
+                });
+              },
               child: Text(
                 'True',
                 style: TextStyle(
@@ -78,11 +93,21 @@ class _QuizPageState extends State<QuizPage> {
             child: TextButton(
               style: TextButton.styleFrom(
                 backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.zero,
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
               ),
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  if (quizBank.getQuestionAnswer(quizBank.questionNum) ==
+                      false) {
+                    scoreKeeper.add(Icon(Icons.check, color: Colors.green));
+                  } else {
+                    scoreKeeper.add(Icon(Icons.close, color: Colors.red));
+                  }
+                  if (quizBank.questionNum < quizBank.questionBank.length - 1) {
+                    quizBank.nextQuestion();
+                  }
+                });
+              },
               child: Text(
                 'False',
                 style: TextStyle(
@@ -94,6 +119,7 @@ class _QuizPageState extends State<QuizPage> {
             ),
           ),
         ),
+        Row(children: scoreKeeper),
       ],
     );
   }
